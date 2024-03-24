@@ -6,9 +6,22 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "axios": "^1.6.1",
+        "@vitejs/plugin-vue": "^5.0.4",
+        "autoprefixer": "^10.4.19",
+        "axios": "^1.6.8",
         "laravel-vite-plugin": "^1.0.0",
+        "postcss": "^8.4.38",
+        "tailwind": "^4.0.0",
+        "unocss": "^0.58.6",
         "vite": "^5.0.0"
     },
-    "packageManager": "pnpm@8.15.3+sha1.64838798f519c18029c1e8a1310e16101fc2eda0"
+    "packageManager": "pnpm@8.15.3+sha1.64838798f519c18029c1e8a1310e16101fc2eda0",
+    "dependencies": {
+        "@youcan/ui-core": "^2.6.0-beta.3",
+        "@youcan/ui-icons": "^2.6.0-beta.3",
+        "@youcan/ui-vue3": "^2.5.8",
+        "vue": "^3.4.21",
+        "vue-loader": "^17.4.2",
+        "vue-router": "^4.3.0"
+    }
 }

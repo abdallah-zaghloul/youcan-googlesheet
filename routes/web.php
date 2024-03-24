@@ -16,6 +16,14 @@ use YouCan\Services\CurrentAuthSession;
 |
 */
 
-Route::get('/', function () {
-    return CurrentAuthSession::getCurrentSession();
-})->middleware([YouCanAuthenticate::class, YouCanCSPHeaders::class]);
+Route::get('/', fn() => "<pre>"
+    . json_encode(
+        value: [
+            'request' => request()->all(),
+            'headers' => getallheaders(),
+            'session' => CurrentAuthSession::getCurrentSession()
+        ],
+        flags: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+    )
+    . "</pre>"
+)->middleware([YouCanAuthenticate::class, YouCanCSPHeaders::class]);
