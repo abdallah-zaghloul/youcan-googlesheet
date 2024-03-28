@@ -11,6 +11,9 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "league/fractal": "^0.20.1",
+        "prettus/l5-repository": "^2.9",
+        "prettus/laravel-validation": "^1.5",
         "twilio/sdk": "^7.13",
         "youcanshop/sdk": "dev-master"
     },
