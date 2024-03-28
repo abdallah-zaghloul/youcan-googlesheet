@@ -28,3 +28,11 @@ Route::group([
     Route::get('/', [SettingController::class, 'get'])->name('get');
     Route::post('/', [SettingController::class, 'set'])->name('set');
 });
+
+Route::group([
+    'prefix' => 'sheets',
+    'as' => 'sheets.',
+    'middleware' => [YouCanAuthenticate::class, YouCanCSPHeaders::class],
+], function () {
+
+});
