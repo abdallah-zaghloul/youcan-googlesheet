@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\SettingRepository;
+use App\Repositories\SettingRepositoryEloquent;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -19,6 +21,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->app->bind(SettingRepository::class, SettingRepositoryEloquent::class);
         //:end-bindings:
     }
 }

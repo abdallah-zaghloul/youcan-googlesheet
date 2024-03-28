@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 use YouCan\Http\Middleware\YouCanAuthenticate;
 use YouCan\Http\Middleware\YouCanCSPHeaders;
-use YouCan\Services\CurrentAuthSession;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,14 +16,15 @@ use YouCan\Services\CurrentAuthSession;
 |
 */
 
-Route::get('/', fn() => "<pre>"
-    . json_encode(
-        value: [
-            'request' => request()->all(),
-            'headers' => getallheaders(),
-            'session' => CurrentAuthSession::getCurrentSession()
-        ],
-        flags: JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-    )
-    . "</pre>"
-)->middleware([YouCanAuthenticate::class, YouCanCSPHeaders::class]);
+//main vue entry point
+//Route::view('/{vue_capture?}','index')->where('vue_capture', '[\/\w\.-]*');
+Route::view('/', 'index')->name('index');
+
+Route::group([
+    'prefix' => 'setting',
+    'as' => 'setting.',
+    'middleware' => [YouCanAuthenticate::class, YouCanCSPHeaders::class],
+], function () {
+    Route::get('/', [SettingController::class, 'get'])->name('get');
+    Route::post('/', [SettingController::class, 'set'])->name('set');
+});
