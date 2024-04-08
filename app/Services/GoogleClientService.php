@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Setting;
+use Exception;
 use Google\Client;
 use Google\Service\PeopleService;
 use Google\Service\Sheets;
@@ -12,38 +13,40 @@ use YouCan\Services\CurrentAuthSession;
 
 class GoogleClientService
 {
+    protected Session $youcanSession;
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(
         protected SettingService $settingService,
-        protected Client  $client,
-        protected Session $session,
+        protected Client  $googleClient,
         protected array   $scopes = [PeopleService::USERINFO_EMAIL, Sheets::SPREADSHEETS]
     )
     {
-        $this->session = CurrentAuthSession::getCurrentSession();
+        $this->youcanSession = CurrentAuthSession::getCurrentSession();
     }
 
-    public function authorize(Setting $setting): RedirectResponse
+    public function authorize(): RedirectResponse
     {
         $authURL = $this->get()->createAuthUrl($this->scopes);
         return redirect()->to($authURL);
-
     }
 
     public function get(): Client
     {
-        $setting = $this->settingService->get();
-        $this->client->setClientId($setting->clientId()->getValue());
-        $this->client->setClientSecret($setting->clientSecret()->getValue());
-        $this->client->addScope($this->scopes);
-        $this->client->setRedirectUri(config('youcan.api_redirect'));
-        $this->client->setAccessType("offline");
-        $this->client->setPrompt("consent");
-        $this->client->setState($setting->storeId()->getValue());
-        $this->client->setAccessToken($setting->accessToken()->getValue());
-        return $this->client;
+        $setting = $this->settingService->get(
+            store_id: $this->youcanSession->getStoreId(),
+            seller_id: $this->youcanSession->getSellerId()
+        );
+        $this->googleClient->setClientId($setting->clientId()->getValue());
+        $this->googleClient->setClientSecret($setting->clientSecret()->getValue());
+        $this->googleClient->addScope($this->scopes);
+        $this->googleClient->setRedirectUri(config('youcan.api_redirect'));
+        $this->googleClient->setAccessType("offline");
+        $this->googleClient->setPrompt("consent");
+        $this->googleClient->setState($setting->storeId()->getValue());
+        $this->googleClient->setAccessToken($setting->accessToken()->getValue());
+        return $this->googleClient;
     }
 
 }

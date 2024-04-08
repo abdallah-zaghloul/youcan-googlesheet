@@ -6,13 +6,18 @@ use App\Services\SettingService;
 use App\Traits\Response;
 use App\Validators\SettingValidator;
 use Exception;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Prettus\Validator\Exceptions\ValidatorException;
+use YouCan\Models\Session;
+use YouCan\Services\CurrentAuthSession;
 
 class SettingController
 {
     use Response;
+
+    protected Session $youcanSession;
 
     /**
      * @throws Exception
@@ -22,17 +27,13 @@ class SettingController
         protected SettingValidator $settingValidator
     )
     {
-
+        $this->youcanSession = CurrentAuthSession::getCurrentSession();
     }
 
-    public function get(): JsonResponse
-    {
-        $setting = $this->settingService->get();
-        return $this->dataResponse(data: $setting);
-    }
 
     /**
      * @throws ValidatorException
+     * @throws Exception
      */
     public function set(Request $request): JsonResponse
     {
@@ -40,11 +41,27 @@ class SettingController
             ->passesOrFail(action: SettingValidator::RULE_SET);
 
         $setting = $this->settingService->set(
+            store_id: $this->youcanSession->getStoreId(),
+            seller_id: $this->youcanSession->getSellerId(),
             client_id: $request->get('client_id'),
             client_secret: $request->get('client_secret'),
             is_connected: $request->boolean('is_connected')
         );
 
-        return $this->dataResponse(data: $setting);
+        return $this->dataResponse($setting);
+    }
+
+
+    /**
+     * @throws Exception
+     */
+    public function get(): JsonResponse
+    {
+        $setting = $this->settingService->get(
+            store_id: $this->youcanSession->getStoreId(),
+            seller_id: $this->youcanSession->getSellerId()
+        );
+
+        return $this->dataResponse($setting);
     }
 }

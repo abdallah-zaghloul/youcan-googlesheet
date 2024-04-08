@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 use YouCan\Http\Middleware\YouCanAuthenticate;
@@ -17,8 +18,7 @@ use YouCan\Http\Middleware\YouCanCSPHeaders;
 */
 
 //main vue entry point
-//Route::view('/{vue_capture?}','index')->where('vue_capture', '[\/\w\.-]*');
-Route::view('/', 'index')->name('index');
+Route::get('/', HomeController::class)->name('home');
 
 Route::group([
     'prefix' => 'setting',
