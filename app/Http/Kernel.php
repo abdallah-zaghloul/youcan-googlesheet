@@ -2,7 +2,10 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\YouCanSession;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use YouCan\Http\Middleware\YouCanAuthenticate;
+use YouCan\Http\Middleware\YouCanCSPHeaders;
 
 class Kernel extends HttpKernel
 {
@@ -40,9 +43,14 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+        'set_youcan_session' => [
+            YouCanAuthenticate::class,
+            YouCanCSPHeaders::class,
+            YouCanSession::class
+        ]
     ];
 
     /**

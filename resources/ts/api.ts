@@ -1,12 +1,43 @@
 import {AxiosRequestConfig, AxiosResponse, default as baseAxios} from 'axios';
-// @ts-ignore
 import {Call, Session} from "@/ts/interface.ts";
 import {ref} from "vue";
 
 export default class api {
 
+    //Just for debugging
+    public static setSession(session: Session) {
+        localStorage.setItem('session', JSON.stringify(session));
+        return session
+    }
+
+    //Just for debugging
+    public static setCsrf(csrf: string) {
+        localStorage.setItem('csrf', csrf);
+        return csrf
+    }
+    //Just for debugging
+    public static getCsrf() {
+        return localStorage.getItem('csrf');
+    }
+    //Just for debugging
+    public static getSession(): Session | null {
+        const session: string | null = localStorage.getItem('session');
+        return session ? JSON.parse(session) : null;
+    }
+
+    public static getConfig(): AxiosRequestConfig {
+        return {
+            withCredentials: true,
+            headers: {
+                'x-api-key': this.getSession()?.store_id,
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': this.getCsrf(),
+            }
+        };
+    }
+
     public static axios() {
-        return baseAxios.create();
+        return baseAxios.create(this.getConfig());
     }
 
 

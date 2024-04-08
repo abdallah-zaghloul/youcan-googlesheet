@@ -11,6 +11,10 @@
 </head>
 
 <body>
+{{--Just for debugging--}}
+<input id="session" type="hidden" value="{{$session}}">
+<input id="csrf" type="hidden" value="{{csrf_token()}}">
+
 <!-- main vue component -->
 <div id="app">
 
