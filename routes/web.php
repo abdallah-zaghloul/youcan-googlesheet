@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GoogleClientController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,13 @@ Route::group([
 ], function () {
     Route::get('/', [SettingController::class, 'get'])->name('get');
     Route::post('/', [SettingController::class, 'set'])->name('set');
+});
+
+Route::group([
+    'prefix' => 'google-client',
+    'as' => 'google-client.',
+], function () {
+    Route::post('/', [GoogleClientController::class, 'connect'])->name('connect');
 });
 
 Route::group([
