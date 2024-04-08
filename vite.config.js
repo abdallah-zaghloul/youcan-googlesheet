@@ -2,11 +2,12 @@ import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import UnoCSS from 'unocss/vite'
+import * as path from 'path';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/css/app.css', 'resources/ts/app.ts'],
             refresh: true,
         }),
         vue({
@@ -29,4 +30,10 @@ export default defineConfig({
         }),
         UnoCSS()
     ],
+    resolve: {
+        alias: {
+            '@/': path.join(__dirname, '/resources/'),
+            '~': path.join(__dirname, '/node_modules/'),
+        },
+    },
 });
